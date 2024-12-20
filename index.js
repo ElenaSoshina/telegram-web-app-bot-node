@@ -10,7 +10,7 @@ const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app'
 const bot = new TelegramBot(token, {polling: true});
 const app = express()
 app.use(express.json()) // middleware для парсинга json
-app.use(cors()) // middleware для кросдоменных имен
+app.use(cors({ origin: webAppUrl })); // middleware для кросдоменных имен
 
 
 // Listen for any kind of message. There are different kinds of
