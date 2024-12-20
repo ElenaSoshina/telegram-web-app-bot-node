@@ -4,6 +4,7 @@ const cors = require('cors')
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token  = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ'
+const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app'
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true});
@@ -11,7 +12,7 @@ const app = express()
 app.use(express.json()) // middleware для парсинга json
 app.use(cors()) // middleware для кросдоменных имен
 
-const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app'
+
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on('message', async (msg) => {
@@ -63,7 +64,7 @@ bot.on('message', async (msg) => {
   }
   
   app.post('/web-data', async (req, res) => {
-    const {queryId, products, totalPrice} = req.body
+    const {queryId, products=[], totalPrice} = req.body
     
     try {
       await bot.answerWebAppQuery(queryId, {
@@ -76,14 +77,14 @@ bot.on('message', async (msg) => {
       })
       return res.status(200).json({})
     } catch (e) {
-      await bot.answerWebAppQuery(queryId, {
-        type: 'article',
-        id: queryId,
-        title: 'Не удалось приобрести товар',
-        input_message_content: {
-          message_text: 'Не удалось приобрести товар'
-        }
-      })
+      // await bot.answerWebAppQuery(queryId, {
+      //   type: 'article',
+      //   id: queryId,
+      //   title: 'Не удалось приобрести товар',
+      //   input_message_content: {
+      //     message_text: 'Не удалось приобрести товар'
+      //   }
+      // })
       return res.status(500).json({})
     }
     
