@@ -2,6 +2,16 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
+
+// Replace the value below with the Telegram token you receive from @BotFather
+const token = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ';
+const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app';
+
+// Create a bot that uses 'polling' to fetch new updates
+const bot = new TelegramBot(token, { polling: true });
+const app = express();
+
+app.use(express.json()); // Middleware for parsing JSON
 const allowedOrigins = ['https://spiffy-macaron-2c257e.netlify.app'];
 
 app.use(cors({
@@ -14,16 +24,6 @@ app.use(cors({
   },
   credentials: true, // If credentials are needed
 }));
-// Replace the value below with the Telegram token you receive from @BotFather
-const token = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ';
-const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app';
-
-// Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, { polling: true });
-const app = express();
-
-app.use(express.json()); // Middleware for parsing JSON
-app.use(cors({ origin: webAppUrl })); // Middleware for handling CORS
 
 // Route to handle web data (Moved outside the bot handler)
 app.post('/web-data', async (req, res) => {
