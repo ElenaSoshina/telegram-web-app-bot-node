@@ -2,6 +2,18 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 
+const allowedOrigins = ['https://spiffy-macaron-2c257e.netlify.app'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // If credentials are needed
+}));
 // Replace the value below with the Telegram token you receive from @BotFather
 const token = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ';
 const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app';
