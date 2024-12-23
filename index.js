@@ -84,4 +84,4 @@ bot.on('message', async (msg) => {
 
 // Start the Express server
 const PORT = 8080;
-app.listen(PORT, () => console.log('Server started on PORT ' + PORT));
+app.listen(PORT, '0.0.0.0', () => console.log('Server started on PORT ' + PORT));
