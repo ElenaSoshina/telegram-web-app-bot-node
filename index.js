@@ -57,6 +57,11 @@ bot.on('message', async (msg) => {
 
 app.post('/web-data', async (req, res) => {
     const {queryId, products = [], totalPrice} = req.body;
+    
+    if (!queryId) {
+        return res.status(400).json({ error: 'Missing query ID' });
+    }
+    
     try {
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
@@ -66,9 +71,11 @@ app.post('/web-data', async (req, res) => {
                 message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
             }
         })
-        return res.status(200).json({});
-    } catch (e) {
-        return res.status(500).json({})
+        console.log('Query processed successfully.');
+        return res.status(200).json({ message: 'Success' })
+    } catch (error) {
+        console.error('Error in answerWebAppQuery:', error);
+        return res.status(500).json({ error: 'Failed to process query' });
     }
 })
 
