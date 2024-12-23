@@ -27,23 +27,29 @@ app.use(cors({ origin: webAppUrl })); // Middleware for handling CORS
 
 // Route to handle web data (Moved outside the bot handler)
 app.post('/web-data', async (req, res) => {
+  console.log('Incoming /web-data request:', JSON.stringify(req.body, null, 2));
+
   const { queryId, products = [], totalPrice } = req.body;
 
   try {
-  console.log('Attempting to answer web app query...');
-  await bot.answerWebAppQuery(queryId, {
-    type: 'article',
-    id: queryId,
-    title: 'Успешная покупка',
-    input_message_content: {
-      message_text: `Поздравляю с покупкой! Вы приобрели товар на сумму ${totalPrice} ₽`,
-    },
-  });
-  console.log('Successfully answered web app query for:', queryId);
-} catch (error) {
-  console.error('Error in bot.answerWebAppQuery:', error);
-}
+    console.log('Attempting to answer web app query...');
+    const response = await bot.answerWebAppQuery(queryId, {
+      type: 'article',
+      id: queryId,
+      title: 'Успешная покупка',
+      input_message_content: {
+        message_text: `Поздравляю с покупкой! Вы приобрели товар на сумму ${totalPrice} ₽`,
+      },
+    });
+
+    console.log('Telegram API response:', response);
+    return res.status(200).json({ message: 'Success', totalPrice });
+  } catch (error) {
+    console.error('Error in bot.answerWebAppQuery:', error.message || error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
 
 // Listen for any kind of message
 bot.on('message', async (msg) => {
