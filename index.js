@@ -14,7 +14,12 @@ const app = express();
 
 
 app.use(express.json()); // Middleware for parsing JSON
-app.use(cors())
+const corsOptions = {
+    origin: '*', // Replace '*' with specific origins for better security
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+};
+app.use(cors(corsOptions));
 // Route to handle web data (Moved outside the bot handler)
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
