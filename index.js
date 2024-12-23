@@ -18,19 +18,19 @@ app.post('/web-data', async (req, res) => {
   const { queryId, products = [], totalPrice } = req.body;
 
   try {
-    await bot.answerWebAppQuery(queryId, {
-      type: 'article',
-      id: queryId,
-      title: 'Успешная покупка',
-      input_message_content: {
-        message_text: 'Поздравляю с покупкой, Вы приобрели товар на сумму ' + totalPrice,
-      },
-    });
-    return res.status(200).json({});
-  } catch (e) {
-    console.error('Error processing /web-data:', e);
-    return res.status(500).json({});
-  }
+  console.log('Attempting to answer web app query...');
+  await bot.answerWebAppQuery(queryId, {
+    type: 'article',
+    id: queryId,
+    title: 'Успешная покупка',
+    input_message_content: {
+      message_text: `Поздравляю с покупкой! Вы приобрели товар на сумму ${totalPrice} ₽`,
+    },
+  });
+  console.log('Successfully answered web app query for:', queryId);
+} catch (error) {
+  console.error('Error in bot.answerWebAppQuery:', error);
+}
 });
 
 // Listen for any kind of message
