@@ -11,7 +11,6 @@ const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app';
 const bot = new TelegramBot(token, { polling: true });
 const app = express();
 
-app.use(express.json()); // Middleware for parsing JSON
 const allowedOrigins = ['https://spiffy-macaron-2c257e.netlify.app'];
 
 app.use(cors({
@@ -24,6 +23,9 @@ app.use(cors({
   },
   credentials: true, // If credentials are needed
 }));
+
+
+app.use(express.json()); // Middleware for parsing JSON
 
 // Route to handle web data (Moved outside the bot handler)
 app.post('/web-data', async (req, res) => {
