@@ -75,6 +75,17 @@ bot.on('message', async (msg) => {
     }
 });
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // Разрешаем любые источники
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Разрешаем методы
+    res.header("Access-Control-Allow-Headers", "Content-Type"); // Разрешаем заголовки
+
+    // Отвечаем на preflight-запросы
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+    next();
+});
 
 app.get('/web-data', (req, res) => {
     console.log('[SERVER] Проверка маршрута: /web-data доступен');
