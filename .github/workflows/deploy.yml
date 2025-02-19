@@ -43,4 +43,4 @@ jobs:
             docker pull elenasoshina/telegram-web-app-bot-node:latest
             docker stop myapp || true
             docker rm myapp || true
-            docker run -d --name tg-bot1 -p 8001:3000 elenasoshina/telegram-web-app-bot-node:latest
+            docker run -d --name tg-bot-test -p 8001:3000 elenasoshina/telegram-web-app-bot-node:latest

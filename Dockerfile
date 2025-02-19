@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Открываем порт, если он необходим (необязательно для Telegram бота)
-EXPOSE 8000
+EXPOSE 8001
 
 # Указываем команду для запуска бота
 CMD ["node", "index.js"]
