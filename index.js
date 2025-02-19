@@ -77,10 +77,17 @@ app.post('/web-data', async (req, res) => {
             }
         })
         console.log('Query processed successfully.');
-        return res.status(200).json({ message: 'Success' })
+        return res.status(200).json({})
     } catch (error) {
-        console.error('Error in answerWebAppQuery:', error);
-        return res.status(500).json({ error: 'Failed to process query' });
+        await bot.answerWebAppQuery(queryId, {
+            type: 'article',
+            id: queryId,
+            title: 'Не удалось приобрести товар',
+            input_message_content: {
+                message_text: 'Произошла ошибка при обработке запроса. Пожалуйста, попробуйте еще раз.'
+            }
+        })
+        return res.status(500).json({})
     }
 })
 
