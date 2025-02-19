@@ -75,6 +75,13 @@ bot.on('message', async (msg) => {
     }
 });
 
+
+app.get('/web-data', (req, res) => {
+    console.log('[SERVER] Проверка маршрута: /web-data доступен');
+    res.status(200).json({ message: 'Маршрут работает!' });
+});
+
+console.log('[SERVER] Регистрируем маршрут POST /web-data')
 app.post('/web-data', async (req, res) => {
     console.log('[SERVER] Получены данные от WebApp:', req.body);
     const { queryId, products = [], totalPrice } = req.body;
