@@ -133,6 +133,6 @@ app.post('/web-data', async (req, res) => {
     }
 });
 
-const PORT = 8000;
+const PORT = 8010;
 app.listen(PORT, '0.0.0.0', () => console.log(`[SERVER] Сервер запущен на порту ${PORT}`));
 
