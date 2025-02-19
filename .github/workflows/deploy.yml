@@ -27,7 +27,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: elenasoshina/tg-shopping-bot:latest
+          tags: elenasoshina/telegram-web-app-bot-node:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            docker pull elenasoshina/tg-shopping-bot:latest
+            docker pull elenasoshina/telegram-web-app-bot-node:latest
             docker stop myapp || true
             docker rm myapp || true
-            docker run -d --name myapp -p 80:3000 elenasoshina/tg-shopping-bot:latest
+            docker run -d --name myapp -p 80:3000 elenasoshina/telegram-web-app-bot-node:latest
