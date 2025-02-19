@@ -19,7 +19,10 @@ const corsOptions = {
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 };
-app.use(cors(corsOptions));
+app.use(express.json(), (req, res, next) => {
+    console.log('Тело запроса:', req.body);
+    next();
+});
 // Route to handle web data (Moved outside the bot handler)
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
@@ -61,9 +64,11 @@ bot.on('message', async (msg) => {
 });
 
 app.post('/web-data', async (req, res) => {
+    console.log('Получены данные:', req.body);
     const {queryId, products = [], totalPrice} = req.body;
     
     if (!queryId) {
+        console.error('Ошибка: Отсутствует queryId');
         return res.status(400).json({ error: 'Missing query ID' });
     }
     
@@ -87,10 +92,11 @@ app.post('/web-data', async (req, res) => {
                 message_text: 'Произошла ошибка при обработке запроса. Пожалуйста, попробуйте еще раз.'
             }
         })
-        return res.status(500).json({})
+        return res.status(500).json({ error: 'Ошибка сервера' })
     }
 })
 
 const PORT = 8000;
 
-app.listen(PORT, () => console.log('server started on PORT ' + PORT))
+app.listen(PORT, '0.0.0.0', () => console.log('server started on PORT ' + PORT));
+
