@@ -93,6 +93,10 @@ app.post('/web-data', async (req, res) => {
 
     try {
         console.log(`[SERVER] Обрабатываем WebApp Query (queryId: ${queryId})...`);
+
+        console.log(`[SERVER] queryId полученный от WebApp: ${queryId}`);
+        console.log(`[SERVER] queryId из запроса: ${req.body.queryId}`);
+
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
             id: queryId,
