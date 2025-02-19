@@ -5,7 +5,7 @@ const cors = require('cors');
 
 // Replace the value below with the Telegram token you receive from @BotFather
 const token = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ';
-const webAppUrl = 'https://spiffy-macaron-2c257e.netlify.app';
+const webAppUrl = 'https://dainty-bienenstitch-faa8f1.netlify.app';
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
