@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Открываем порт 8010
-EXPOSE 8010
+EXPOSE 8020
 
 # Указываем команду для запуска бота
 CMD ["node", "index.js"]
