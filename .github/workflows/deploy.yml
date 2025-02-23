@@ -41,6 +41,6 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             docker pull elenasoshina/telegram-web-app-bot-node:latest
-#            docker stop myapp || true
-#            docker rm myapp || true
+            docker stop tg-bot-test || true
+            docker rm tg-bot-test || true
             docker run -d --name tg-bot-test -p 8020:8020 elenasoshina/telegram-web-app-bot-node:latest
