@@ -76,6 +76,10 @@ bot.on('message', async (msg) => {
 });
 
 app.use((req, res, next) => {
+    const origin = req.headers.origin || 'unknown';
+    const referer = req.headers.referer || 'no-referer';
+    console.log(`[REQUEST LOG] Method=${req.method}, URL=${req.url}, Origin=${origin}, Referer=${referer}`);
+    console.log(`[REQUEST HEADERS]`, req.headers);
     res.header("Access-Control-Allow-Origin", "*"); // Разрешаем любые источники
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Разрешаем методы
     res.header("Access-Control-Allow-Headers", "Content-Type"); // Разрешаем заголовки
