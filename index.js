@@ -94,19 +94,19 @@ app.get('/web-data', (req, res) => {
 
 console.log('[SERVER] Регистрируем маршрут POST /web-data')
 app.post('/web-data', async (req, res) => {
-    console.log('[SERVER] Получены данные от WebApp:', req.body);
+    console.log('[SERVER] >>> Принят POST /web-data');
+    console.log('[SERVER] Полный заголовок запроса:', req.headers);
+    console.log('[SERVER] Полученные данные:', req.body);
+
     const { queryId, products = [], totalPrice } = req.body;
 
     if (!queryId) {
-        console.error('[ERROR] Ошибка: Отсутствует queryId');
+        console.error('[ERROR] >>> Отсутствует queryId в запросе!');
         return res.status(400).json({ error: 'Missing query ID' });
     }
 
     try {
-        console.log(`[SERVER] Обрабатываем WebApp Query (queryId: ${queryId})...`);
-
-        console.log(`[SERVER] queryId полученный от WebApp: ${queryId}`);
-        console.log(`[SERVER] queryId из запроса: ${req.body.queryId}`);
+        console.log(`[SERVER] >>> Обрабатываем WebApp Query (queryId: ${queryId})...`);
 
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
@@ -117,21 +117,14 @@ app.post('/web-data', async (req, res) => {
             }
         });
 
-        console.log('[SERVER] Запрос обработан успешно.');
-        return res.status(200).json({});
+        console.log('[SERVER] >>> Запрос успешно обработан!');
+        return res.status(200).json({ success: true });
     } catch (error) {
-        console.error('[ERROR] Ошибка при обработке запроса:', error);
-        await bot.answerWebAppQuery(queryId, {
-            type: 'article',
-            id: queryId,
-            title: 'Не удалось приобрести товар',
-            input_message_content: {
-                message_text: 'Произошла ошибка при обработке запроса. Попробуйте ещё раз.'
-            }
-        });
+        console.error('[ERROR] >>> Ошибка при обработке запроса:', error);
         return res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
+
 
 const PORT = 8010;
 app.listen(PORT, '0.0.0.0', () => console.log(`[SERVER] Сервер запущен на порту ${PORT}`));
