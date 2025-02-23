@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-    origin: '*',
+    origin: 'https://elenasoshina.github.io',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 };
