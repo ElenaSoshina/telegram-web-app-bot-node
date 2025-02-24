@@ -104,10 +104,10 @@ app.post('/web-data', async (req, res) => {
 
     const { queryId, products = [], totalPrice } = req.body;
 
-    if (!queryId) {
-        console.error('[ERROR] >>> Отсутствует queryId в запросе!');
-        return res.status(400).json({ error: 'Missing query ID' });
-    }
+    // if (!queryId) {
+    //     console.error('[ERROR] >>> Отсутствует queryId в запросе!');
+    //     return res.status(400).json({ error: 'Missing query ID' });
+    // }
 
     try {
         console.log(`[SERVER] >>> Обрабатываем WebApp Query (queryId: ${queryId})...`);
