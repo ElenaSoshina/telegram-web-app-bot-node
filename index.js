@@ -90,7 +90,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-axios.get('https://13d4-95-179-251-170.ngrok-free.app/web-data', { params: data })
 
 
 console.log('[SERVER] Регистрируем маршрут POST /web-data')
