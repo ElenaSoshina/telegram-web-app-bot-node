@@ -22,107 +22,64 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
-    console.log(`[REQUEST] ${req.method} ${req.url} - Тело запроса:`, req.body);
-    next();
-});
+app.use(express.json());
+app.use(cors());
 
 bot.on('message', async (msg) => {
-    try {
-        console.log('[BOT] Получено сообщение:', msg);
-        const chatId = msg.chat.id;
-        const text = msg.text;
+    const chatId = msg.chat.id;
+    const text = msg.text;
 
-        if (text === '/start') {
-            console.log('[BOT] Отправка клавиатуры с формой...');
-            await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
-                reply_markup: {
-                    keyboard: [
-                        [{ text: 'Заполнить форму', web_app: { url: 'https://elenasoshina.github.io/telegram-web-app-react/#/form' } }]
-                    ]
-                }
-            });
-
-            console.log('[BOT] Отправка inline-кнопки для заказа...');
-            await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{ text: 'Сделать заказ', web_app: { url: webAppUrl } }]
-                    ]
-                }
-            });
-        }
-
-        if (msg?.web_app_data?.data) {
-            console.log('[BOT] Получены данные от WebApp:', msg.web_app_data.data);
-            try {
-                const data = JSON.parse(msg?.web_app_data?.data);
-                console.log('[BOT] Распарсенные данные:', data);
-
-                await bot.sendMessage(chatId, 'Спасибо за обратную связь!');
-                await bot.sendMessage(chatId, `Ваша страна: ${data?.country}`);
-                await bot.sendMessage(chatId, `Ваша улица: ${data?.street}`);
-
-                setTimeout(async () => {
-                    await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
-                }, 3000);
-            } catch (e) {
-                console.error('[ERROR] Ошибка при обработке web_app_data:', e);
+    if(text === '/start') {
+        await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
+            reply_markup: {
+                keyboard: [
+                    [{text: 'Заполнить форму', web_app: {url: webAppUrl + '/form'}}]
+                ]
             }
+        })
+
+        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
+            reply_markup: {
+                inline_keyboard: [
+                    [{text: 'Сделать заказ', web_app: {url: webAppUrl}}]
+                ]
+            }
+        })
+    }
+
+    if(msg?.web_app_data?.data) {
+        try {
+            const data = JSON.parse(msg?.web_app_data?.data)
+            console.log(data)
+            await bot.sendMessage(chatId, 'Спасибо за обратную связь!')
+            await bot.sendMessage(chatId, 'Ваша страна: ' + data?.country);
+            await bot.sendMessage(chatId, 'Ваша улица: ' + data?.street);
+
+            setTimeout(async () => {
+                await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
+            }, 3000)
+        } catch (e) {
+            console.log(e);
         }
-    } catch (error) {
-        console.error('[ERROR] Ошибка в обработке сообщения:', error);
     }
 });
 
-app.use((req, res, next) => {
-    const origin = req.headers.origin || 'unknown';
-    const referer = req.headers.referer || 'no-referer';
-    console.log(`[REQUEST LOG] Method=${req.method}, URL=${req.url}, Origin=${origin}, Referer=${referer}`);
-    console.log(`[REQUEST HEADERS]`, req.headers);
-    res.header("Access-Control-Allow-Origin", "*"); // Разрешаем любые источники
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Разрешаем методы
-    res.header("Access-Control-Allow-Headers", "Content-Type"); // Разрешаем заголовки
-
-    // Отвечаем на preflight-запросы
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-    next();
-});
-
-
-console.log('[SERVER] Регистрируем маршрут POST /web-data')
 app.post('/web-data', async (req, res) => {
-    console.log('[SERVER] >>> Принят POST /web-data');
-    console.log('[SERVER] Полный заголовок запроса:', req.headers);
-    console.log('[SERVER] Полученные данные:', req.body);
-
-    const { queryId, products = [], totalPrice } = req.body;
-
-    // if (!queryId) {
-    //     console.error('[ERROR] >>> Отсутствует queryId в запросе!');
-    //     return res.status(400).json({ error: 'Missing query ID' });
-    // }
-
+    const {queryId, products = [], totalPrice} = req.body;
     try {
-
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
             id: queryId,
             title: 'Успешная покупка',
             input_message_content: {
-                message_text: `Поздравляю с покупкой! Вы приобрели товары на сумму ${totalPrice}: ${products.map(item => item.title).join(', ')}`
+                message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
             }
-        });
-
-        console.log('[SERVER] >>> Запрос успешно обработан!');
-        return res.status(200).json({ success: true });
-    } catch (error) {
-        console.error('[ERROR] >>> Ошибка при обработке запроса:', error);
-        return res.status(500).json({ error: 'Ошибка сервера' });
+        })
+        return res.status(200).json({});
+    } catch (e) {
+        return res.status(500).json({})
     }
-});
+})
 
 
 const PORT = 8020;
