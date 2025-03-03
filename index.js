@@ -5,7 +5,7 @@ const cors = require('cors');
 
 // Replace the value below with the Telegram token you receive from @BotFather
 const token = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ';
-const webAppUrl = 'https://elenasoshina.github.io/telegram-web-app-react/';
+const webAppUrl = 'https://elenasoshina.github.io/telegram-web-app-react/#/';
 
 // Create a bot that uses 'polling' to fetch new updates
 console.log('[INFO] Запускаем Telegram бота...');
