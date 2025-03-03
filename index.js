@@ -90,11 +90,8 @@ app.use((req, res, next) => {
     }
     next();
 });
+axios.get('https://13d4-95-179-251-170.ngrok-free.app/web-data', { params: data })
 
-app.get('/web-data', (req, res) => {
-    console.log('[SERVER] Проверка маршрута: /web-data доступен');
-    res.status(200).json({ message: 'Маршрут работает!' });
-});
 
 console.log('[SERVER] Регистрируем маршрут POST /web-data')
 app.post('/web-data', async (req, res) => {
@@ -110,7 +107,6 @@ app.post('/web-data', async (req, res) => {
     // }
 
     try {
-        console.log(`[SERVER] >>> Обрабатываем WebApp Query (queryId: ${queryId})...`);
 
         await bot.answerWebAppQuery(queryId, {
             type: 'article',
