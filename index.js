@@ -30,6 +30,7 @@ bot.on('message', async (msg) => {
     const text = msg.text;
 
     if(text === '/start') {
+        console.log('[INFO] Запускаем Telegram бота...');
         await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
             reply_markup: {
                 keyboard: [
