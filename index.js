@@ -65,22 +65,36 @@ bot.on('message', async (msg) => {
 });
 
 app.post('/web-data', async (req, res) => {
-    console.log('Получены данные:', req.body);
-    const {queryId, products = [], totalPrice} = req.body;
+    console.log('[DEBUG] Получены данные:', req.body);
+
+    const { queryId, products = [], totalPrice } = req.body;
+
+    if (!queryId) {
+        console.error('[ERROR] queryId отсутствует!');
+        return res.status(400).json({ error: 'queryId отсутствует' });
+    }
+
     try {
-        await bot.answerWebAppQuery(queryId, {
+        console.log(`[DEBUG] Отправляем ответ пользователю... queryId=${queryId}`);
+
+        const response = await bot.answerWebAppQuery(queryId, {
             type: 'article',
             id: queryId,
             title: 'Успешная покупка',
             input_message_content: {
-                message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
+                message_text: `Поздравляю с покупкой! Вы приобрели: ${products.map(item => item.title).join(', ')} на сумму ${totalPrice}₽`
             }
-        })
-        return res.status(200).json({});
-    } catch (e) {
-        return res.status(500).json({})
+        });
+
+        console.log('[DEBUG] Ответ от Telegram:', response);
+        return res.status(200).json({ status: 'ok' });
+
+    } catch (error) {
+        console.error('[ERROR] Ошибка в bot.answerWebAppQuery:', error);
+        return res.status(500).json({ error: 'Ошибка сервера' });
     }
-})
+});
+
 
 
 const PORT = 8020;
