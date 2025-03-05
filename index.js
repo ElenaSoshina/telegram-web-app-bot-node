@@ -10,7 +10,7 @@ const webAppUrl = 'https://elenasoshina.github.io/telegram-web-app-react/#/';
 // Create a bot that uses 'polling' to fetch new updates
 console.log('[INFO] Запускаем Telegram бота...');
 const bot = new TelegramBot(token, { polling: true });
-console.log('[INFO] Бот запущен!');
+console.log('[INFO] Бот запущен!!!');
 
 const app = express();
 app.use(express.json());
