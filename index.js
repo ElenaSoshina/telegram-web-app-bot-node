@@ -1,7 +1,13 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
+const fs = require("fs");
 
+// Загружаем SSL-сертификат
+const options = {
+    key: fs.readFileSync("server.key"),
+    cert: fs.readFileSync("server.cert")
+};
 
 // Replace the value below with the Telegram token you receive from @BotFather
 const token = '7527771820:AAHXWX0j9-kEw_QDnY45CaU1GukTgi81lFQ';
