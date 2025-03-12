@@ -108,7 +108,7 @@ app.post('/send-message', async (req, res) => {
         return res.status(200).json({ status: "ok" });
     } catch (error) {
         console.error("Ошибка при отправке сообщения:", error);
-        return res.status(500).json({ error: "Ошибка сервера" });
+        return res.status(500).json({ error: "Ошибка сервера!" });
     }
 });
 
