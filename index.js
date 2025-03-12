@@ -65,36 +65,76 @@ bot.on('message', async (msg) => {
     }
 });
 
-app.post('/web-data', async (req, res) => {
-    console.log('[DEBUG] Получены данные:', req.body);
+// app.post('/web-data', async (req, res) => {
+//     console.log('[DEBUG] Получены данные:', req.body);
+//
+//     const { queryId, products = [], totalPrice } = req.body;
+//
+//     if (!queryId) {
+//         console.error('[ERROR] queryId отсутствует!');
+//         return res.status(400).json({ error: 'queryId отсутствует' });
+//     }
+//
+//     try {
+//         console.log(`[DEBUG] Отправляем ответ пользователю... queryId=${queryId}`);
+//
+//         const response = await bot.answerWebAppQuery(queryId, {
+//             type: 'article',
+//             id: queryId,
+//             title: 'Успешная покупка',
+//             input_message_content: {
+//                 message_text: `Поздравляю с покупкой! Вы приобрели: ${products.map(item => item.title).join(', ')} на сумму ${totalPrice}₽`
+//             }
+//         });
+//
+//         console.log('[DEBUG] Ответ от Telegram:', response);
+//         return res.status(200).json({ status: 'ok' });
+//
+//     } catch (error) {
+//         console.error('[ERROR] Ошибка в bot.answerWebAppQuery:', error);
+//         return res.status(500).json({ error: 'Ошибка сервера' });
+//     }
+// });
 
-    const { queryId, products = [], totalPrice } = req.body;
+app.post('/web-data', async (req, res) => {
+    const { queryId, products, promoCode } = req.body;
 
     if (!queryId) {
-        console.error('[ERROR] queryId отсутствует!');
         return res.status(400).json({ error: 'queryId отсутствует' });
     }
 
+    // Пересчитываем сумму на сервере
+    let totalAmount = products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    if (promoCode === "discount10") totalAmount *= 0.9;
+    if (promoCode === "discount15") totalAmount *= 0.85;
+
+    // Добавляем стоимость доставки
+    const shippingCost = 500; // Доставка 5.00$ в копейках (500 копеек)
+    totalAmount = Math.round(totalAmount * 100) + shippingCost;
+
     try {
-        console.log(`[DEBUG] Отправляем ответ пользователю... queryId=${queryId}`);
+        // Отправляем счёт (invoice) в Telegram
+        const invoice = {
+            chat_id: queryId,
+            title: "Оплата заказа",
+            description: `Ваш заказ на сумму ${totalAmount / 100}₽ (включая доставку)`,
+            payload: JSON.stringify(products),
+            provider_token: "ВАШ_PROVIDER_TOKEN", // Токен платёжного провайдера
+            currency: "RUB",
+            prices: [{ label: "Сумма", amount: totalAmount }],
+            need_email: true
+        };
 
-        const response = await bot.answerWebAppQuery(queryId, {
-            type: 'article',
-            id: queryId,
-            title: 'Успешная покупка',
-            input_message_content: {
-                message_text: `Поздравляю с покупкой! Вы приобрели: ${products.map(item => item.title).join(', ')} на сумму ${totalPrice}₽`
-            }
-        });
+        await bot.sendInvoice(invoice.chat_id, invoice.title, invoice.description, invoice.payload, invoice.provider_token, invoice.currency, invoice.prices);
 
-        console.log('[DEBUG] Ответ от Telegram:', response);
-        return res.status(200).json({ status: 'ok' });
-
+        return res.status(200).json({ status: "ok" });
     } catch (error) {
-        console.error('[ERROR] Ошибка в bot.answerWebAppQuery:', error);
-        return res.status(500).json({ error: 'Ошибка сервера' });
+        console.error("Ошибка при создании оплаты:", error);
+        return res.status(500).json({ error: "Ошибка сервера" });
     }
 });
+
+
 
 
 
