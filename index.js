@@ -96,46 +96,21 @@ bot.on('message', async (msg) => {
 //     }
 // });
 
-app.post('/web-data', async (req, res) => {
-    const { queryId, products, promoCode } = req.body;
+app.post('/send-message', async (req, res) => {
+    const { chatId, text } = req.body;
 
-    if (!queryId) {
-        return res.status(400).json({ error: 'queryId отсутствует' });
+    if (!chatId || !text) {
+        return res.status(400).json({ error: 'chatId или text отсутствует' });
     }
 
-    // Пересчитываем сумму на сервере
-    let totalAmount = products.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    if (promoCode === "discount10") totalAmount *= 0.9;
-    if (promoCode === "discount15") totalAmount *= 0.85;
-
-    // Добавляем стоимость доставки
-    const shippingCost = 500; // Доставка 5.00$ в копейках (500 копеек)
-    totalAmount = Math.round(totalAmount * 100) + shippingCost;
-
     try {
-        // Отправляем счёт (invoice) в Telegram
-        const invoice = {
-            chat_id: queryId,
-            title: "Оплата заказа",
-            description: `Ваш заказ на сумму ${totalAmount / 100}₽ (включая доставку)`,
-            payload: JSON.stringify(products),
-            provider_token: "ВАШ_PROVIDER_TOKEN", // Токен платёжного провайдера
-            currency: "RUB",
-            prices: [{ label: "Сумма", amount: totalAmount }],
-            need_email: true
-        };
-
-        await bot.sendInvoice(invoice.chat_id, invoice.title, invoice.description, invoice.payload, invoice.provider_token, invoice.currency, invoice.prices);
-
+        await bot.sendMessage(chatId, text, { parse_mode: "Markdown" });
         return res.status(200).json({ status: "ok" });
     } catch (error) {
-        console.error("Ошибка при создании оплаты:", error);
+        console.error("Ошибка при отправке сообщения:", error);
         return res.status(500).json({ error: "Ошибка сервера" });
     }
 });
-
-
-
 
 
 const PORT = 8020;
