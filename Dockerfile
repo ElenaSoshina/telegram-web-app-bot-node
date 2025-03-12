@@ -12,8 +12,6 @@ RUN npm install
 # Копируем оставшиеся файлы проекта
 COPY . .
 
-# Копируем SSL-сертификаты в контейнер
-COPY server.key server.cert /app/
 
 # Открываем порт 8010
 EXPOSE 8020

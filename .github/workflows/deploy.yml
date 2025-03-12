@@ -40,15 +40,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            # Проверяем, есть ли сертификаты на сервере
-            if [ ! -f /root/server.key ] || [ ! -f /root/server.cert ]; then
-              echo "SSL сертификаты не найдены! Загружаем из GitHub Secrets..."
-              echo "${{ secrets.SSL_KEY }}" > /root/server.key
-              echo "${{ secrets.SSL_CERT }}" > /root/server.cert
-              chmod 600 /root/server.key /root/server.cert
-            else
-              echo "SSL сертификаты уже есть на сервере."
-            fi
+            echo "${{ secrets.SSL_CERT }}" > /root/server.cert
+            echo "${{ secrets.SSL_KEY }}" > /root/server.key
+            chmod 600 /root/server.key /root/server.cert
             
             docker pull elenasoshina/telegram-web-app-bot-node:latest
             docker stop tg-bot-test || true
