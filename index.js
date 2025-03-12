@@ -96,6 +96,10 @@ bot.on('message', async (msg) => {
 //     }
 // });
 
+app.get("/", (req, res) => {
+    res.send("Server is running!");
+});
+
 app.post('/send-message', async (req, res) => {
     const { chatId, text } = req.body;
 
