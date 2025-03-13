@@ -38,18 +38,20 @@ bot.on('message', async (msg) => {
 
     if(text === '/start') {
         console.log('[INFO] Запускаем Telegram бота...');
-        await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
-            reply_markup: {
-                keyboard: [
-                    [{text: 'Заполнить форму', web_app: {url: webAppUrl + 'form'}}]
-                ]
-            }
-        })
+        // await bot.sendMessage(chatId, 'Ниже появится кнопка, заполни форму', {
+        //     reply_markup: {
+        //         keyboard: [
+        //             [{text: 'Заполнить форму', web_app: {url: webAppUrl + 'form'}}]
+        //         ]
+        //     }
+        // })
 
-        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
+        await bot.sendMessage(chatId, 'Welcome to Urban Pulse! We\'re excited to have you here. Click on \'Catalog\' to check out our newest arrivals and exclusive offers."\n' +
+            '\n' +
+            'Feel free to adjust the wording to best match your brand\'s tone and personality.', {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'Сделать заказ', web_app: {url: webAppUrl}}]
+                    [{text: 'Catalog', web_app: {url: webAppUrl}}]
                 ]
             }
         })
