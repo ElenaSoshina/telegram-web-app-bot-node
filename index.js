@@ -2,11 +2,12 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const fs = require("fs");
+const https = require("https");
 
 // Загружаем SSL-сертификат
 const options = {
-    key: fs.readFileSync("server.key"),
-    cert: fs.readFileSync("server.cert")
+    key: fs.readFileSync("/app/server.key"),  // полный путь внутри контейнера
+    cert: fs.readFileSync("/app/server.cert")
 };
 
 // Replace the value below with the Telegram token you receive from @BotFather
@@ -122,7 +123,8 @@ app.post('/send-message', async (req, res) => {
     }
 });
 
-
 const PORT = 8020;
-app.listen(PORT, '0.0.0.0', () => console.log(`[SERVER] Сервер запущен на порту ${PORT}`));
+https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
+    console.log(`[SERVER] HTTPS сервер запущен на порту ${PORT}`);
+});
 
