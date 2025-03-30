@@ -66,7 +66,7 @@ bot.on('message', async (msg) => {
             await bot.sendMessage(chatId, 'Ваша улица: ' + data?.street);
 
             setTimeout(async () => {
-                await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
+                await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате ');
             }, 3000)
         } catch (e) {
             console.log(e);
